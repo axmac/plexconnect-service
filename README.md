@@ -14,6 +14,10 @@ Install the service:
 
         sudo update-rc.d plexconnect defaults
 
+Enble on startup:
+
+        sudo systemctl enable plexconnect
+
 Start the service:
 
         sudo service plexconnect start
@@ -26,4 +30,9 @@ E.g. to log to `/var/log/PlexConnect.log`, set `logpath` in `Settings.cfg`:
 
         logpath = /var/log
 
+# Plex Media Server
+
+Ensure Plex Media Server is enabled at boot:
+
+        sudo systemctl enable plexmediaserver.service
 
