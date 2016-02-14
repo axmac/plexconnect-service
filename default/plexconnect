@@ -1,0 +1,8 @@
+# default script for PlexConnect
+
+# the user that PlexConnect should run as
+# not used, always runs as root or ports can't be acquired (fix this sometime)
+#PLEX_CONNECT_USER=plex
+
+PLEX_CONNECT_HOME=/usr/local/lib/PlexConnect
+

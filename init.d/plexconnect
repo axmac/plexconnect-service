@@ -1,0 +1,61 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          plexconnect
+# Required-Start:    $remote_fs $syslog $networking
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: PlexConnect
+# Description:       PlexConnect for Linux
+# Author:            https://github.com/iBaa/PlexConnect
+# Version:           0.5
+### END INIT INFO
+
+# Read configuration variable file if it is present
+[ -r /etc/default/plexconnect ] && . /etc/default/plexconnect
+
+plexconnect_cmd="$PLEX_CONNECT_HOME/PlexConnect.py"
+
+test -f "$plexconnect_cmd" || exit 0
+
+plexconnect_running=`ps ax | grep "$plexconnect_cmd" | awk '{ print $1 }' | wc -l`
+
+case "$1" in
+    start)
+	if [ "$plexconnect_running" -gt 1 ]; then
+		echo "PlexConnect already running..."
+		exit 0
+	fi
+	echo -n "Starting PlexConnect: "
+	su -c "$plexconnect_cmd &" >/dev/null 2>&1
+	sleep 1
+	echo "done"
+	;;
+    stop)
+	if [ "$plexconnect_running" -eq 1 ]; then
+		echo "PlexConnect is not running (no process found)..."
+		exit 0
+	fi
+	echo -n "Killing PlexConnect: "
+	ps ax | grep "$plexconnect_cmd" | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1
+	sleep 1
+	echo "done"
+	;;
+    restart)
+	sh $0 stop
+	sh $0 start
+	;;
+    status)
+        if [ "$plexconnect_running" -gt 1 ]; then
+                echo "PlexConnect process running."
+	else
+		echo "It seems that PlexConnect isn't running (no process found)."
+        fi
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+	;;
+esac
+
+exit 0
